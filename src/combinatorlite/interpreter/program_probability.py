@@ -1,4 +1,4 @@
-from combinator.interpreter.type_check import *
+from combinatorlite.interpreter.type_check import *
 
 def initialize_probability():
 	global corpusInstance,no_of_args #corpus_of_all_objects, corpus_index

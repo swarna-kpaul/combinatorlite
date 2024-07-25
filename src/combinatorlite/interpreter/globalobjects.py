@@ -1,4 +1,4 @@
-from combinator.environment.env import *
+from combinatorlite.environment.env import *
 import pickle
 
 atype = {'iW':{'fun':{'i':['None'],'o':['any']}},

@@ -1,7 +1,7 @@
 # cython: profile=True
 # cython: linetrace=True
 # distutils: define_macros=CYTHON_TRACE_NOGIL=1
-from combinator.interpreter.makegraph import *
+from combinatorlite.interpreter.makegraph import *
 
 class time_exception(Exception):
     pass

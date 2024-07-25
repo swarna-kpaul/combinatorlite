@@ -1,5 +1,5 @@
-from combinator.interpreter.program_expression import *
-from combinator.interpreter.program_probability import *
+from combinatorlite.interpreter.program_expression import *
+from combinatorlite.interpreter.program_probability import *
 import pickle
 label =0
 no_of_arguments=0 
