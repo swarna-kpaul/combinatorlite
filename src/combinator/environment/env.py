@@ -21,7 +21,11 @@ class worldclass:
     def __init__(self,extfunctions={}, out_data_type='any'):
         self.envtime_sec = 0
         self.total_runtime = 0
+        self.world_failed = 0
+        self.runtime = 0
+        self.obs = None 
         self.extfunctions = extfunctions
+        self.version = 0
         
     def reset(self):
         self.version = 0

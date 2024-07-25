@@ -132,28 +132,29 @@ output = runp(g9,graph)
 print(output[0])
 ```
 
-##### API POST call with actuator and sensor
+##### External function call 
 ```python
-from combinator import creategraph, createnode, addlink, init_world, runp
-graph = creategraph()
-g1 = createnode(graph,'iW',init_world)
-g2 = createnode(graph,'K',{'url':'https://httpbin.org/post','headers':{'Content-Type':'application/json'}})
-g3 = createnode(graph,'K','');
-g4 = createnode(graph,'ac','dict'); # the third argument in actuator or sensor node is the input type and output type respectively. If no argument is supplied the type is set as 'any'
-g5 = createnode(graph,'sn','any');
-g6 = createnode(graph,'ac','char');
-g7 = createnode(graph,'sn','any');
-addlink(graph,g1);addlink(graph,g2,g1);addlink(graph,g4,g2);
-addlink(graph,g5,g4);addlink(graph,g3,g5);addlink(graph,g6,g3);addlink(graph,g7,g6);
-output = runp(g7,graph)
-print(output[0])
+from combinator import creategraph, createnode, addlink, init_world, runp, worldclass
+def extadd(a,b):
+  print("ext",a,b)
+  return a+b
+extfunction = {"extadd": {"function": extadd}}
+init_world = worldclass(extfunction)
+
+
+graph = creategraph('TestGraph') # Takes graphname as argument
+g1 = createnode(graph,'iW',init_world) # 1st argument should be the graph object, 2nd the node short name and 3rd argument should be specific parameters needed to create specific nodes. Except for initworld, constant, sensor and actuator 3rd argument is not needed. 
+g2 = createnode(graph,'K',6);
+g3 = createnode(graph,'K',3)
+g4 = createnode(graph,"extadd")
+addlink(graph,g1); 
+addlink(graph,g2,g1); # first argument should be the graph object, 2nd the node which needs to be connect to its parents and rest of the arguments should be the parent nodes in sequence.
+addlink(graph,g3,g1);
+addlink(graph,g4,g3,g2);
+output = runp(g4,graph) # The first argument should be the terminal node which needs to be run and 2nd the graph object
+print (output[0])
 ```
 
-##### Update the environment 
-```python
-from combinator import init_world
-init_world.update_env(<environment object>) # check environment/apienv.py to find out how to build an environment object. It can serve as an template to build your own custom environment object
-```
 
 ##### Get runtime errors
 ```python
@@ -207,5 +208,3 @@ Following are the list of available primitives in combinator:
 |aggregator| ag | Aggregates the element of a list by an aggregator function. The aggregator function should be provided in input port 1 and the list in input port 2. |
 |loop| lp | Converts the subgraph corresponding to parentnode1, a function and applies it _n_ number of times to its output. The initial argument of the function will be _n_ , where _n_ is supplied as an integer to its input port 2. |
 |recurse| rc | Takes 2 function and one data value of any type as input. The function supplied to input port 1 is applied recursively on the 3rd input until stopping condition is met. The function supplied to input port 2 is applied on 3rd input to evaluate the stopping condition. |
-|sensor| sn | sends a read request to the environment and outputs the recieved data|
-|actuator| ac | sends and write request to the environment and writes the input data|
