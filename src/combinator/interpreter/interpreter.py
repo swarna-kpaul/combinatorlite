@@ -34,7 +34,7 @@ def returngraph(parnode_label, graph):
         return(parnode_label,graph)
 
 
-def _interpreter_ext_funct(nodename,terminalnode_label,graph,tottime):
+def _interpret_ext_funct(nodename,terminalnode_label,graph,tottime):
     try:
         parents=getval_graph(graph,terminalnode_label,'E')
     except Exception as e:
@@ -42,19 +42,20 @@ def _interpreter_ext_funct(nodename,terminalnode_label,graph,tottime):
     
     ######## exec all parent nodes ##########
     parentoutputtuple = []
-    for parent in parents:
-        parnode_label,pargraph = returngraph(parents[0],graph)
-        parentoutput1,w1,wv1,tottime = interpreter(parnode_label,pargraph,tottime)
+    #print ("terminalnode_label",terminalnode_label)
+    for k,parent in parents.items():
+        parnode_label,pargraph = returngraph(parent,graph)
+        #print("parnode_label",parnode_label)
+        parentoutput1,w,wv,tottime = interpreter(parnode_label,pargraph,tottime)
         parentoutputtuple.append(parentoutput1)
     parentoutputtuple = tuple(parentoutputtuple)
-    try:
-        w.put_ext_action(nodename,parentoutput)
-        data = w.get_ext_data(None)
-        prev_version = wv
-        w.upgrade()
+    w.put_ext_action(nodename,parentoutputtuple)
+    data = w.get_ext_data()
+    prev_version = wv
+    w.upgrade()
         #if w.version != prev_version + 1:
         #    raise Exception("Invalid sequence of actuator")
-        wv = w.version
+    wv = w.version
     try:
         setval_graph('dat',data,graph,terminalnode_label,'N')
     except Exception as e:
@@ -108,31 +109,31 @@ def _interpret_single_input_funct(nodename,terminalnode_label,graph,tottime): #[
         except Exception as e:
             raise combinatorruntimeerror([{'message':"Unable get the tail of the list! The input data of this tail node may not be of list type.",'error':repr(e),'nodeid':terminalnode_label}])
         nodenamefull = "tail"
-    elif nodename == 'sn':
-        data = w.get_data(tottime.remoteserviceheader)
-        prev_version = wv
-        w.upgrade()
-        #if w.version != prev_version + 1:
-        #    raise Exception("Invalid sequence of sensor")
-        wv = w.version
-        nodenamefull = "sensor"
-    elif nodename == 'ac':
-        data = 1
-        w.put_action(parentoutput,tottime.remoteserviceheader)
-        prev_version = wv
-        w.upgrade()
-        #if w.version != prev_version + 1:
-        #    raise Exception("Invalid sequence of actuator")
-        wv = w.version
-        nodenamefull = "actuator"
-    elif nodename == 'gc':
-        data = w.check_goal_state(parentoutput,tottime.remoteserviceheader)
-        prev_version = wv
-        w.upgrade()
-        #if w.version != prev_version + 1:
-        #    raise Exception("Invalid sequence of goalchecker")
-        wv = w.version
-        nodenamefull = "goalchecker"
+    # elif nodename == 'sn':
+        # data = w.get_data(tottime.remoteserviceheader)
+        # prev_version = wv
+        # w.upgrade()
+        # #if w.version != prev_version + 1:
+        # #    raise Exception("Invalid sequence of sensor")
+        # wv = w.version
+        # nodenamefull = "sensor"
+    # elif nodename == 'ac':
+        # data = 1
+        # w.put_action(parentoutput,tottime.remoteserviceheader)
+        # prev_version = wv
+        # w.upgrade()
+        # #if w.version != prev_version + 1:
+        # #    raise Exception("Invalid sequence of actuator")
+        # wv = w.version
+        # nodenamefull = "actuator"
+    # elif nodename == 'gc':
+        # data = w.check_goal_state(parentoutput,tottime.remoteserviceheader)
+        # prev_version = wv
+        # w.upgrade()
+        # #if w.version != prev_version + 1:
+        # #    raise Exception("Invalid sequence of goalchecker")
+        # wv = w.version
+        # nodenamefull = "goalchecker"
     try:
         setval_graph('dat',data,graph,terminalnode_label,'N')
     except Exception as e:
@@ -736,14 +737,14 @@ def _interpreter( terminalnode_label,  graph, tottime):
             tottime = _interpret_zip(nodename,terminalnode_label,graph,tottime)
         elif nodename == 'ag':
             tottime = _interpret_agg(nodename,terminalnode_label,graph,tottime)
-        elif no_of_args[nodename] == 3: #nodename == 'if' or nodename == 'rc' or nodename == 'zp':#nodename in ['if','rc','zp']:
+        elif nodename in ['if','rc','zp']: #nodename == 'if' or nodename == 'rc' or nodename == 'zp':#no_of_args[nodename] == 3:
             if nodename == 'if':
                 tottime = _interpret_if(nodename,terminalnode_label,graph,tottime)
             elif nodename == 'rc':
                 tottime = _interpret_rc(nodename,terminalnode_label,graph,tottime)
             elif nodename == 'ak':
                 tottime = _interpret_ak(nodename,terminalnode_label,graph,tottime)
-        elif nodename in ['K','id','!','hd','tl','sn','ac','gc','nl']:#nodename =='K' or nodename == 'id' or nodename == '!' or nodename == 'hd' or nodename == 'tl' or nodename == 'sn' or nodename == 'ac' or nodename == 'gc' or nodename =='nl': # no_of_args[nodename] == 1 ########### constant, identity, negate
+        elif nodename in ['K','id','!','hd','tl','nl']:#nodename =='K' or nodename == 'id' or nodename == '!' or nodename == 'hd' or nodename == 'tl' or nodename == 'sn' or nodename == 'ac' or nodename == 'gc' or nodename =='nl': # no_of_args[nodename] == 1 ########### constant, identity, negate
             tottime = _interpret_single_input_funct(nodename,terminalnode_label,graph,tottime)
         elif nodename in ['+','-','*','/','^','&','|','>','=','cn','wm']: #nodename == '+' or nodename =='-' or nodename == '*' or nodename == '/' or nodename == '^' or nodename == '&' or nodename == '|' or nodename == '>' or nodename =='=' or nodename =='cn' or nodename =='wm':# no_of_args[nodename] == 2: ########### num operators
             tottime = _interpret_two_port_funct(nodename,terminalnode_label,graph,tottime)
@@ -758,6 +759,7 @@ def _interpreter( terminalnode_label,  graph, tottime):
 
 
 def interpreter(terminalnode_label, graph,tottime):
+    #print(terminalnode_label)
     nodename=getval_graph(graph,terminalnode_label,'N','nm')
     if nodename != 'iW' and nodename != 'lg' and getval_graph(graph,terminalnode_label,'N','dat') == None and nodename != 'lp' and nodename != 'fm' and  nodename != 'if':    
         while True:
