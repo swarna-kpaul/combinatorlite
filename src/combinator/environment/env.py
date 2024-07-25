@@ -55,4 +55,4 @@ class worldclass:
                    
     
 ######### initialize world
-#init_world = worldclass(api_world)
+init_world = worldclass()
