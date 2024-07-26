@@ -1,4 +1,5 @@
 from combinatorlite.interpreter.globalobjects import *
+from combinatorlite.interpreter.type_check import *
 import pickle
 
 

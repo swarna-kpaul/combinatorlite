@@ -17,10 +17,8 @@ class combinatorruntimeerror(Exception):
 class time_object:
     def __init__(self,time_limit):
         self.time = time_limit
-        self.remoteserviceheader = None
     def consume_time(self,_steps):
         self.time -= _steps
-        corpusInstance.total_runtime +=1
     def get_time(self):
         return self.time
     
@@ -794,8 +792,7 @@ def interpreter(terminalnode_label, graph,tottime):
     else:
         return _interpreter(terminalnode_label,graph,tottime)    
     
-def runp(terminalnode, graph,remoteserviceheader={},time_limit = float("inf")):
+def runp(terminalnode, graph,time_limit = float("inf")):
     tottime = time_object(time_limit)
-    tottime.remoteserviceheader = remoteserviceheader
     data,w,wv,tottime = interpreter(terminalnode,graph,tottime)
     return (data,w,wv,tottime.get_time())
