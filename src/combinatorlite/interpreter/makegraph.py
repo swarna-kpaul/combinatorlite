@@ -1,45 +1,5 @@
-from combinatorlite.interpreter.program_expression import *
-from combinatorlite.interpreter.program_probability import *
+from combinatorlite.interpreter.globalobjects import *
 import pickle
-label =0
-no_of_arguments=0 
-world_version=0 
-exec_status=0 
-update_exp=1 
-is_initial=0
-equivalent_prog=0 
-runtime=0
-program_probability=0
-reward=0.0
-average_reward = (0,0,0)
-#init_node_label = 1
-graph_label = 1
-world = None
-
-class current_node_label:
-	def __init__(self):
-		self.init_node_label = 1
-	
-	def set_node_label(self,node_label):
-		self.init_node_label = node_label
-	
-	def inc_node_label(self):
-		self.init_node_label += 1
-
-current_node_label_obj = current_node_label()
-
-node_attributes = {'wv': world_version, 'es': exec_status,'uex':update_exp, 'ii':is_initial,'ep':equivalent_prog, 'rt':runtime,'pp':program_probability,'R': reward,'aR': average_reward,'w':world,'ty':None, 'dat':None,'pex':{'data':None, 'world':None},'pint':dict(), 'ni': None, 'fp':{},'pos':{}}
-######## pint -> {'nodelabel':{'childnode_index':{'childnode_port':[probability]}}}
-######### fp -> {'parentnodelabel'+'-'+'childnodelabel'+'-'+childnode_port: [probability]}}} 
-
-graph_attributes = {'label':0,'name':'graph'}
-#nodes = {init_node_label:node_attributes}
-#graph = {'edges':{init_node_label:{1:init_node_label,2:init_node_label}}, 'terminalnodes':[terminal_init_node_labels], initialnodes:[initial_init_node_labels]}
-#nodes = dict()
-
-initgraph = {'attr':graph_attributes,'world':None,'edges':{},'nodes':{},'terminalnodes':{}, 'initialnodes':[], 'existingnodes':{} ,'atype': {'fun':{'i':['none'],'o':['none']}}}
-
-probability_list={}
 
 
 def setval_graph(key,val,graph,node_label,property):
@@ -80,31 +40,6 @@ def remove_node(graph,node_label):
 	except Exception as e:   
 		pass
 		
-def update_program_expression(node_label,node_name,node_output, graph):
-##### Derive, reduce and update program expression of the program having this node as terminal node 
-	if getval_graph(graph,node_label,'N','uex') == 1:
-		current_expression = get_program_expression(node_label,node_name,node_output, graph)
-		if current_expression:
-			if str(current_expression['data']) == 'True' :
-				current_expression['data'] = True
-			elif str(current_expression['data']) == 'False':
-				current_expression['data'] = False
-			setval_graph('pex',current_expression,graph,node_label,'N')
-
-def createnode_from_corpus(graph,index):
-	global corpusInstance #corpus_of_all_objects
-	object = corpusInstance.corpus_of_all_objects[index]
-	if 'param' in object:
-		_nlabel = createnode( graph,object['nm'],object['param'])
-		setval_graph('ty',pickle.loads(pickle.dumps(object['typ'],-1)),graph,_nlabel,'N')
-	else:
-		_nlabel = createnode( graph,object['nm'])
-	setval_graph('ni',index,graph,_nlabel,'N')
-	setval_graph('pint',pickle.loads(pickle.dumps(corpusInstance.type_compatible_node_links[index],-1)),graph,_nlabel,'N')
-	
-	return (_nlabel)
-
-
 def createnode( graph, nodename,*args):
 	global current_node_label_obj,node_attributes, atype, no_of_args
 	init_node_label = current_node_label_obj.init_node_label
@@ -115,7 +50,6 @@ def createnode( graph, nodename,*args):
 		graph['nodes'][init_node_label]['w'] = args[0]
 		graph['nodes'][init_node_label]['es'] = 1
 		graph['nodes'][init_node_label]['ii'] = 1
-		graph['nodes'][init_node_label]['pp'] = 1
 		graph['world'] = args[0]
 	elif nodename == 'K':
 		graph['nodes'][init_node_label]['K'] = args[0]
@@ -137,8 +71,8 @@ def createnode( graph, nodename,*args):
 	elif nodename == 'gp': #composite graph
 		fun = args[0]
 		
-		for k,_n in fun['nodes'].items():
-			fun['nodes'][k]['uex'] = 0            
+		#for k,_n in fun['nodes'].items():
+		#	fun['nodes'][k]['uex'] = 0            
 		fun['par'] = graph        
 		no_args = 0
 		for label in fun['initialnodes']:
@@ -230,7 +164,6 @@ def resetGraph(graph):
 	for label,node in graph['nodes'].items():
 		graph['nodes'][label]['dat'] = None
 		graph['nodes'][label]['wv'] = 0
-		graph['nodes'][label]['R'] = 0
 		#graph['nodes'][label]['rt'] = 0
 		if graph['nodes'][label]['es'] != 4:
 			graph['nodes'][label]['es'] = 0
