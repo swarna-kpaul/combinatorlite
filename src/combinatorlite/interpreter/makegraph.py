@@ -1,4 +1,4 @@
-from combinatorlite.interpreter.globalobjects import *
+from combinatorlite.environment.env import *
 from combinatorlite.interpreter.type_check import *
 import pickle
 
@@ -40,6 +40,17 @@ def remove_node(graph,node_label):
 			del graph['edges'][nlabel]
 	except Exception as e:   
 		pass
+        
+def update_program_expression(node_label,node_name,node_output, graph):
+##### Derive, reduce and update program expression of the program having this node as terminal node 
+	if getval_graph(graph,node_label,'N','uex') == 1:
+		current_expression = get_program_expression(node_label,node_name,node_output, graph)
+		if current_expression:
+			if str(current_expression['data']) == 'True' :
+				current_expression['data'] = True
+			elif str(current_expression['data']) == 'False':
+				current_expression['data'] = False
+			setval_graph('pex',current_expression,graph,node_label,'N')
 		
 def createnode( graph, nodename,*args):
 	global current_node_label_obj,node_attributes, atype, no_of_args
@@ -178,12 +189,11 @@ def _returnSubgraph(graph,terminalnode_label,subGraph):
 	if terminalnode_label in graph['edges'] and graph['nodes'][terminalnode_label]['ii'] !=1 :    
 		subGraph['edges'][terminalnode_label] = pickle.loads(pickle.dumps(graph['edges'][terminalnode_label],-1))
 		for i,sourcenode_label in graph['edges'][terminalnode_label].items():
-			if graph['nodes'][sourcenode_label]['ii'] == 1: #or ( sourcenode_label not in graph['edges'] and no_of_args[graph['nodes'][sourcenode_label]['nm']] >0): ######### sourcenode initialnode
-				subGraph['initialnodes'].append(sourcenode_label)
-				subGraph = _returnSubgraph(graph,sourcenode_label,subGraph)
-			else:
-				subGraph = _returnSubgraph(graph,sourcenode_label,subGraph)
+			subGraph = _returnSubgraph(graph,sourcenode_label,subGraph)
+
 	############## copy subgraph node
+    if graph['nodes'][terminalnode_label]['ii'] == 1: #or ( sourcenode_label not in graph['edges'] and no_of_args[graph['nodes'][sourcenode_label]['nm']] >0): ######### sourcenode initialnode
+		subGraph['initialnodes'].append(terminalnode_label)
 	subGraph['nodes'][terminalnode_label] = {}
 	for key in graph['nodes'][terminalnode_label].keys():
 		if key == 'w':

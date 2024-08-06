@@ -1,4 +1,5 @@
 from combinatorlite.environment.apienv import *
+from combinatorlite.interpreter.globalobjects import *
 import time
 import os
 import psutil

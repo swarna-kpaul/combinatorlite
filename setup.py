@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="combinatorlite",
-    version="1.2",
+    version="1.4",
     author="Swarna Kamal Paul",
     author_email="swarna.kpaul@gmail.com",
     description="The programming model to integrate AI components",
@@ -24,5 +24,5 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
 	keywords = ['programming model', 'dataflow graph', 'functional programming','Integrative AI'],
-	install_requires=[ 'sympy==1.6.2','requests']
+	install_requires=[ 'requests']
 )

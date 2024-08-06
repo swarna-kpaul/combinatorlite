@@ -15,4 +15,5 @@ src/combinatorlite/interpreter/__init__.py
 src/combinatorlite/interpreter/globalobjects.py
 src/combinatorlite/interpreter/interpreter.py
 src/combinatorlite/interpreter/makegraph.py
+src/combinatorlite/interpreter/program_expression.py
 src/combinatorlite/interpreter/type_check.py

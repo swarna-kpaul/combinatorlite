@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: combinatorlite
-Version: 1.2
+Version: 1.4
 Summary: The programming model to integrate AI components
 Home-page: https://github.com/swarna-kpaul/combinatorlite
 Author: Swarna Kamal Paul
@@ -13,7 +13,6 @@ Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
-Requires-Dist: sympy==1.6.2
 Requires-Dist: requests
 
 # Combinator

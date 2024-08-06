@@ -1,4 +1,3 @@
-from combinatorlite.environment.env import *
 import pickle
 
 label =0
