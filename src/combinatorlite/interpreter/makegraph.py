@@ -1,4 +1,3 @@
-from combinatorlite.environment.env import *
 from combinatorlite.interpreter.type_check import *
 import pickle
 
@@ -192,7 +191,7 @@ def _returnSubgraph(graph,terminalnode_label,subGraph):
 			subGraph = _returnSubgraph(graph,sourcenode_label,subGraph)
 
 	############## copy subgraph node
-    if graph['nodes'][terminalnode_label]['ii'] == 1: #or ( sourcenode_label not in graph['edges'] and no_of_args[graph['nodes'][sourcenode_label]['nm']] >0): ######### sourcenode initialnode
+	if graph['nodes'][terminalnode_label]['ii'] == 1: #or ( sourcenode_label not in graph['edges'] and no_of_args[graph['nodes'][sourcenode_label]['nm']] >0): ######### sourcenode initialnode
 		subGraph['initialnodes'].append(terminalnode_label)
 	subGraph['nodes'][terminalnode_label] = {}
 	for key in graph['nodes'][terminalnode_label].keys():

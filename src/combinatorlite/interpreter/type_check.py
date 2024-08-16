@@ -1,4 +1,5 @@
-from combinatorlite.interpreter.globalobjects  import *
+from combinatorlite.environment.env import *
+
 
 def _getatype(graph,nodelabel):
 	global atype

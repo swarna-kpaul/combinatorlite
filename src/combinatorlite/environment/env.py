@@ -26,8 +26,17 @@ class worldclass:
         self.runtime = 0
         self.obs = None 
         self.extfunctions = extfunctions
+        self.updateextfunctiontype()
         self.version = 0
-        
+    
+
+    def updateextfunctiontype(self):
+        for k,v in self.extfunctions.items(): 
+            if "type" in v:
+                atype.update({k:v["type"]})
+            else:
+                atype.update({k: None})
+    
     def reset(self):
         self.version = 0
         self.world_failed = 0
