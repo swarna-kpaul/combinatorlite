@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="combinatorlite",
-    version="1.6",
+    version="1.7",
     author="Swarna Kamal Paul",
     author_email="swarna.kpaul@gmail.com",
     description="The programming model to integrate AI components",

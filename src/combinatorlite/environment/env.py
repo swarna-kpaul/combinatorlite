@@ -36,6 +36,8 @@ class worldclass:
                 atype.update({k:v["type"]})
             else:
                 atype.update({k: None})
+            
+            no_of_args.update({k:v["args"]})
     
     def reset(self):
         self.version = 0
