@@ -19,7 +19,7 @@ class world_pending_exception(Exception):
 
 class worldclass:
     
-    def __init__(self,extfunctions={}, out_data_type='any'):
+    def __init__(self,extfunctions={}, out_data_type='any', extenv = None):
         self.envtime_sec = 0
         self.total_runtime = 0
         self.world_failed = 0
@@ -28,6 +28,7 @@ class worldclass:
         self.extfunctions = extfunctions
         self.updateextfunctiontype()
         self.version = 0
+        self.extenv = extenv
     
 
     def updateextfunctiontype(self):
@@ -52,7 +53,7 @@ class worldclass:
     def put_ext_action(self,actionname,params):
         tick = time.time()
         try:
-            self.obs = self.extfunctions[actionname]["function"](*params) 
+            self.obs = self.extfunctions[actionname]["function"](self.extenv,*params) 
             self.runtime += 1
             #self.total_runtime += 1
             tock = time.time()

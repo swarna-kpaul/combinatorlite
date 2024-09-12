@@ -56,7 +56,7 @@ def createnode( graph, nodename,*args):
 	init_node_label = current_node_label_obj.init_node_label
 	graph['nodes'][init_node_label]=pickle.loads(pickle.dumps(node_attributes,-1))
 	#graph['initialnodes'].append(init_node_label)
-    graph['nodes'][init_node_label]['args'] = no_of_args[nodename]
+	graph['nodes'][init_node_label]['args'] = no_of_args[nodename]
 	graph['nodes'][init_node_label]['nm'] = nodename
 	if nodename == 'iW':
 		graph['nodes'][init_node_label]['w'] = args[0]
